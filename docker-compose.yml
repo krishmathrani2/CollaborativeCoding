@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    env_file: ./backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "80:80"
+
+  db:
+    image: postgres:12
+    container_name: db
+    environment:
+      POSTGRES_DB: code_editor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
