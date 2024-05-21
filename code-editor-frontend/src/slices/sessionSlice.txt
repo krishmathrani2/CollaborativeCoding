@@ -1,0 +1,40 @@
+import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const sessionSlice = createSlice({
+    name: 'session',
+    initialState: {
+        sessions: [],
+        currentSession: null,
+    },
+    reducers: {
+        setSessions: (state, action) => {
+            state.sessions = action.payload;
+        },
+        setCurrentSession: (state, action) => {
+            state.currentSession = action.payload;
+        },
+    },
+});
+
+export const { setSessions, setCurrentSession } = sessionSlice.actions;
+
+export const fetchSessions = () => async dispatch => {
+    try {
+        const response = await axios.get('/api/sessions/');
+        dispatch(setSessions(response.data));
+    } catch (error) {
+        console.error('Failed to fetch sessions:', error);
+    }
+};
+
+export const createSession = (sessionName) => async dispatch => {
+    try {
+        const response = await axios.post('/api/sessions/', { name: sessionName });
+        dispatch(fetchSessions());
+    } catch (error) {
+        console.error('Failed to create session:', error);
+    }
+};
+
+export default sessionSlice.reducer;
